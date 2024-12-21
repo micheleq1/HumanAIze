@@ -1,0 +1,55 @@
+variabili da predire:
+
+main:
+gender
+eta
+muscolatura
+peso
+altezza
+proporzioni
+origini
+
+gender:
+breast size
+bresat firmness
+vertical position
+horizonatl distance
+pointiness
+breast volume
+nipple size
+nipple pointiness
+
+face:
+eta pelle faccia
+grasso faccia
+angle
+oval
+round
+rectungular
+square
+triangular
+inverted triangular
+diamond
+scale depth of paretial size
+
+torso:
+scale depth
+scale horizzontally
+scale vert
+move horizzontally
+move vertically
+move depth
+scale cone shape
+dorsi muscle
+pettoral muscle
+
+arms and legs:
+fingers distance
+fingers diameter
+fingers lenght
+scale hand
+hand position
+
+neck:
+neck circum
+neck height
