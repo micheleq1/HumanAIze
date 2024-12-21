@@ -3,11 +3,18 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_absolute_error
+from sklearn.preprocessing import MinMaxScaler
 
 # Carica il dataset
 df = pd.read_csv('dataset.csv')
+
+# Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
+for column in df.columns:
+    if df[column].dtype in ['float64', 'int64']:  # Se la colonna è numerica
+        df[column] = df[column].fillna(df[column].median())  # Usa mediana
+    else:  # Se la colonna è categorica
+        df[column] = df[column].fillna(df[column].mode()[0])  # Usa moda
 
 # Definire i target numerici
 targets = [
@@ -28,11 +35,11 @@ vectorizer = TfidfVectorizer(max_features=1000)  # Imposta il numero massimo di 
 X_text = vectorizer.fit_transform(df["descrizione"])
 
 # Preprocessing dei target (normalizzazione)
-scaler = StandardScaler()
+scaler = MinMaxScaler()
 y = scaler.fit_transform(df[targets])
 
 # Divisione in train/test
-X_train, X_test, y_train, y_test = train_test_split(X_text, y, test_size=0.1, random_state=23)
+X_train, X_test, y_train, y_test = train_test_split(X_text, y, test_size=0.2, random_state=23)
 
 # Modello di Random Forest Regressor
 model = RandomForestRegressor(n_estimators=100, random_state=23)
@@ -43,13 +50,52 @@ y_pred = model.predict(X_test)
 
 # Invertire la normalizzazione per ottenere i valori originali
 y_pred_original = scaler.inverse_transform(y_pred)
+y_test_original = scaler.inverse_transform(y_test)
 
-# Calcolo dell'errore (MSE) sui target numerici
-mse = mean_squared_error(y_test, y_pred_original)
-print(f"Errore quadratico medio: {mse}")
+# Calcolo della MAE per ogni target separatamente
+print("MAE per ciascun target:")
+mae_per_target = {}
+for i, target in enumerate(targets):
+    mae_target = mean_absolute_error(y_test_original[:, i], y_pred_original[:, i])
+    mae_per_target[target] = mae_target
+    print(f"  {target}: {mae_target:.4f}")
 
-# Visualizzare le previsioni
-for i, num_pred in enumerate(y_pred_original):
-    print(f"Test Sample {i + 1}:")
-    print(f"  Predizione: {num_pred}")
-    print(f"  Valore reale: {scaler.inverse_transform([y_test[i]])[0]}")
+# Calcolo della MAE generale (aggregata su tutti i target)
+mae_general = mean_absolute_error(y_test_original, y_pred_original)
+print(f"\nMAE generale (aggregata): {mae_general:.4f}")
+
+# Funzione per fare una previsione su un input personalizzato
+def predizione_personalizzata(input_descrizione):
+    # Preprocessing dell'input (descrizione) usando lo stesso TfidfVectorizer
+    input_vec = vectorizer.transform([input_descrizione])
+
+    # Previsione
+    y_pred = model.predict(input_vec)
+
+    # Invertire la normalizzazione per ottenere i valori originali
+    y_pred_original = scaler.inverse_transform(y_pred)
+
+    # Restituire la predizione
+    return y_pred_original
+
+# Funzione per visualizzare il confronto tra predizioni e valori reali
+def visualizza_confronto(num_samples=5):
+    print("\nConfronto tra predizioni e valori reali per alcuni campioni:")
+    for i in range(num_samples):  # Mostra i primi 'num_samples' campioni
+        print(f"\nTest Sample {i + 1}:")
+        for j, target in enumerate(targets):
+            print(f"  {target}: Predizione = {y_pred_original[i, j]:.4f}, Reale = {y_test_original[i, j]:.4f}")
+
+# Visualizzare il confronto per i primi 5 campioni
+visualizza_confronto(num_samples=30)
+
+# Esempio di input personalizzato per fare una previsione
+input_descrizione = input("\nInserisci una descrizione per la previsione: ")
+
+# Fare la previsione sull'input
+predizione = predizione_personalizzata(input_descrizione)
+
+# Mostrare la predizione
+print("\nPredizione per i target:")
+for i, target in enumerate(targets):
+    print(f"  {target}: {predizione[0, i]:.4f}")
