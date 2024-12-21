@@ -99,3 +99,19 @@ predizione = predizione_personalizzata(input_descrizione)
 print("\nPredizione per i target:")
 for i, target in enumerate(targets):
     print(f"  {target}: {predizione[0, i]:.4f}")
+# Funzione per aggiornare 'face_age' con i valori di 'age'
+def aggiorna_face_age_con_age(df):
+    df['face_age'] = df['age']  # Assegna i valori della colonna 'age' a 'face_age'
+    return df
+
+# Funzione per aggiornare 'face_age' con i valori di 'age' su tutto il dataset
+def aggiorna_face_age_con_age(df):
+    # Assicuriamoci che 'age' e 'face_age' siano presenti e che abbiano gli stessi valori
+    if 'age' in df.columns and 'face_age' in df.columns:
+        df['face_age'] = df['age']  # Assegna i valori della colonna 'age' a 'face_age'
+    else:
+        print("Le colonne 'age' e 'face_age' non sono presenti nel dataset.")
+    return df
+
+
+
