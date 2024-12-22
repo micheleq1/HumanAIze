@@ -87,7 +87,7 @@ def visualizza_confronto(num_samples=5):
             print(f"  {target}: Predizione = {y_pred_original[i, j]:.4f}, Reale = {y_test_original[i, j]:.4f}")
 
 # Visualizzare il confronto per i primi 5 campioni
-visualizza_confronto(num_samples=30)
+visualizza_confronto(num_samples=20)
 
 # Esempio di input personalizzato per fare una previsione
 input_descrizione = input("\nInserisci una descrizione per la previsione: ")
