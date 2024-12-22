@@ -1,6 +1,8 @@
+from statistics import LinearRegression
+
 import pandas as pd
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
@@ -31,7 +33,7 @@ targets = [
 ]
 
 # Preprocessing del testo (descrizione) usando TF-IDF
-vectorizer = TfidfVectorizer(max_features=1000)  # Imposta il numero massimo di features da estrarre
+vectorizer = TfidfVectorizer()
 X_text = vectorizer.fit_transform(df["descrizione"])
 
 # Preprocessing dei target (normalizzazione)
