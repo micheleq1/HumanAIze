@@ -1,12 +1,9 @@
-from statistics import LinearRegression
-
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import pandas as pd
 import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import MinMaxScaler
 
 # Carica il dataset
 df = pd.read_csv('dataset.csv')
@@ -33,25 +30,42 @@ targets = [
 ]
 
 # Preprocessing del testo (descrizione) usando TF-IDF
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 vectorizer = TfidfVectorizer()
 X_text = vectorizer.fit_transform(df["descrizione"])
 
 # Preprocessing dei target (normalizzazione)
-scaler = MinMaxScaler()
+scaler = StandardScaler()
 y = scaler.fit_transform(df[targets])
 
 # Divisione in train/test
 X_train, X_test, y_train, y_test = train_test_split(X_text, y, test_size=0.2, random_state=23)
 
-# Modello di Random Forest Regressor
-model = RandomForestRegressor(n_estimators=100, random_state=23)
-model.fit(X_train, y_train)
+# Convertire i dati in DMatrix per XGBoost
+dtrain = xgb.DMatrix(X_train, label=y_train)
+dtest = xgb.DMatrix(X_test, label=y_test)
+
+# Definire i parametri del modello XGBoost
+params = {
+    'objective': 'reg:squarederror',
+    'eval_metric': 'mae',
+    'max_depth': 6,
+    'eta': 0.1,
+    'subsample': 0.8,
+    'colsample_bytree': 0.8,
+    'seed': 23
+}
+
+# Addestrare il modello
+num_rounds = 100
+model = xgb.train(params, dtrain, num_rounds)
 
 # Previsione sui dati di test
-y_pred = model.predict(X_test)
+y_pred = model.predict(dtest)
 
 # Invertire la normalizzazione per ottenere i valori originali
-y_pred_original = scaler.inverse_transform(y_pred)
+y_pred_original = scaler.inverse_transform(y_pred.reshape(-1, len(targets)))
 y_test_original = scaler.inverse_transform(y_test)
 
 # Calcolo della MAE per ogni target separatamente
@@ -66,20 +80,23 @@ for i, target in enumerate(targets):
 mae_general = mean_absolute_error(y_test_original, y_pred_original)
 print(f"\nMAE generale (aggregata): {mae_general:.4f}")
 
+
 # Funzione per fare una previsione su un input personalizzato
 def predizione_personalizzata(input_descrizione):
     # Preprocessing dell'input (descrizione) usando lo stesso TfidfVectorizer
     input_vec = vectorizer.transform([input_descrizione])
 
+    # Convertire input_vec in DMatrix
+    input_dmatrix = xgb.DMatrix(input_vec)
+
     # Previsione
-    y_pred = model.predict(input_vec)
+    y_pred = model.predict(input_dmatrix)
 
     # Invertire la normalizzazione per ottenere i valori originali
-    y_pred_original = scaler.inverse_transform(y_pred)
+    y_pred_original = scaler.inverse_transform(y_pred.reshape(1, -1))
 
     # Restituire la predizione
     return y_pred_original
-
 # Funzione per visualizzare il confronto tra predizioni e valori reali
 def visualizza_confronto(num_samples=5):
     print("\nConfronto tra predizioni e valori reali per alcuni campioni:")
@@ -114,6 +131,4 @@ def aggiorna_face_age_con_age(df):
     else:
         print("Le colonne 'age' e 'face_age' non sono presenti nel dataset.")
     return df
-
-
 
