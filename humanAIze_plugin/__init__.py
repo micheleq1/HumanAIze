@@ -1,4 +1,4 @@
-from .prompt_task import PromptTaskView
+from humanAIze_plugin.core.prompt_task import PromptTaskView
 
 def load(app):
     category = app.getCategory('Utilities')  # Usa una categoria esistente

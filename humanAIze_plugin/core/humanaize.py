@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 # Carica il dataset
-df = pd.read_csv('dataset.csv')
+df = pd.read_csv('../data/dataset.csv')
 
 # Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
 for column in df.columns:
