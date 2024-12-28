@@ -1,8 +1,9 @@
+from .humanaize import predizione_personalizzata
+
 import gui3d
 import gui
 import log
 from core import G
-
 
 class PromptTaskView(gui3d.TaskView):
     def __init__(self, category):
@@ -24,15 +25,38 @@ class PromptTaskView(gui3d.TaskView):
             self.processPrompt(prompt)
 
     def processPrompt(self, prompt):
-        # Simula la generazione dei parametri dal prompt
-        log.message(f"Processing prompt: {prompt}")
-        parameters = {
-            "gender": "male",
-            "age": 30,
-            "height": 1.8,
-            "weight": 70,
+        try:
+            # Chiama il modello IA per predire i parametri
+            predictions = predizione_personalizzata(prompt)
+            log.message(f"Predicted parameters: {predictions}")
+
+            # Converte le predizioni in un dizionario di parametri
+            parameters = self.mapPredictionsToParameters(predictions)
+
+            # Applica i parametri a MakeHuman
+            self.applyParametersToMakeHuman(parameters)
+        except Exception as e:
+            log.error(f"Error processing prompt: {e}")
+
+    def mapPredictionsToParameters(self, predictions):
+        # Esempio di mappatura: usa i nomi esatti dei modificatori di MakeHuman
+        modifier_mapping = {
+            "gender": "macrodetails/Gender",
+            "age": "macrodetails/Age",
+            "height": "macrodetails-height/Height",
+            "weight": "macrodetails-universal/Weight"
+            # Aggiungi altre mappature se necessario
         }
-        self.applyParametersToMakeHuman(parameters)
+
+        # Costruisce il dizionario di parametri compatibile
+        parameters = {
+            "gender": "male" if predictions[0][0] < 0.5 else "female",
+            "age": int(predictions[0][1]),
+            "height": float(predictions[0][2]),
+            "weight": float(predictions[0][3])
+        }
+
+        return parameters
 
     def applyParametersToMakeHuman(self, parameters):
         human = G.app.selectedHuman

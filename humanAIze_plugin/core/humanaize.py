@@ -2,11 +2,20 @@ import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
-import pandas as pd
 import numpy as np
+import os
+import pandas as pd
+
+# Calcola il percorso assoluto di dataset.csv
+base_dir = os.path.dirname(__file__)  # Directory in cui si trova humanaize.py
+dataset_path = os.path.join(base_dir, "../data/dataset.csv")
 
 # Carica il dataset
-df = pd.read_csv('../data/dataset.csv')
+df = pd.read_csv(dataset_path)
+
+
+# Carica il dataset
+#df = pd.read_csv('../data/dataset.csv')
 
 # Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
 for column in df.columns:
@@ -108,16 +117,6 @@ def visualizza_confronto(num_samples=5):
 # Visualizzare il confronto per i primi 5 campioni
 visualizza_confronto(num_samples=20)
 
-# Esempio di input personalizzato per fare una previsione
-input_descrizione = input("\nInserisci una descrizione per la previsione: ")
-
-# Fare la previsione sull'input
-predizione = predizione_personalizzata(input_descrizione)
-
-# Mostrare la predizione
-print("\nPredizione per i target:")
-for i, target in enumerate(targets):
-    print(f"  {target}: {predizione[0, i]:.4f}")
 # Funzione per aggiornare 'face_age' con i valori di 'age'
 def aggiorna_face_age_con_age(df):
     df['face_age'] = df['age']  # Assegna i valori della colonna 'age' a 'face_age'
