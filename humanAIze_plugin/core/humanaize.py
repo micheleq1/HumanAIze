@@ -18,11 +18,7 @@ df = pd.read_csv(dataset_path)
 #df = pd.read_csv('../data/dataset.csv')
 
 # Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
-for column in df.columns:
-    if df[column].dtype in ['float64', 'int64']:  # Se la colonna è numerica
-        df[column] = df[column].fillna(df[column].median())  # Usa mediana
-    else:  # Se la colonna è categorica
-        df[column] = df[column].fillna(df[column].mode()[0])  # Usa moda
+
 
 # Definire i target numerici
 targets = [
@@ -107,27 +103,28 @@ def predizione_personalizzata(input_descrizione):
     # Restituire la predizione
     return y_pred_original
 # Funzione per visualizzare il confronto tra predizioni e valori reali
-def visualizza_confronto(num_samples=5):
+def visualizza_confronto_log(y_pred_original, y_test_original, targets, num_samples=5):
+    """
+    Stampa il confronto tra predizioni e valori reali tramite log.message.
+
+    Parameters
+    ----------
+    y_pred_original : ndarray
+        Valori predetti (denormalizzati).
+    y_test_original : ndarray
+        Valori reali (denormalizzati).
+    targets : list
+        Lista dei nomi dei target.
+    num_samples : int
+        Numero di campioni da includere nel log.
+    """
     print("\nConfronto tra predizioni e valori reali per alcuni campioni:")
     for i in range(num_samples):  # Mostra i primi 'num_samples' campioni
         print(f"\nTest Sample {i + 1}:")
         for j, target in enumerate(targets):
-            print(f"  {target}: Predizione = {y_pred_original[i, j]:.4f}, Reale = {y_test_original[i, j]:.4f}")
+            print(
+                f"  {target}: Predizione = {y_pred_original[i, j]:.4f}, Reale = {y_test_original[i, j]:.4f}"
+            )
 
-# Visualizzare il confronto per i primi 5 campioni
-visualizza_confronto(num_samples=20)
 
-# Funzione per aggiornare 'face_age' con i valori di 'age'
-def aggiorna_face_age_con_age(df):
-    df['face_age'] = df['age']  # Assegna i valori della colonna 'age' a 'face_age'
-    return df
-
-# Funzione per aggiornare 'face_age' con i valori di 'age' su tutto il dataset
-def aggiorna_face_age_con_age(df):
-    # Assicuriamoci che 'age' e 'face_age' siano presenti e che abbiano gli stessi valori
-    if 'age' in df.columns and 'face_age' in df.columns:
-        df['face_age'] = df['age']  # Assegna i valori della colonna 'age' a 'face_age'
-    else:
-        print("Le colonne 'age' e 'face_age' non sono presenti nel dataset.")
-    return df
 
