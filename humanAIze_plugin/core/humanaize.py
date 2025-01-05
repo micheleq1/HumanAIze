@@ -1,10 +1,10 @@
-import xgboost as xgb
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-import numpy as np
 import os
+
 import pandas as pd
+import xgboost as xgb
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 # Calcola il percorso assoluto di dataset.csv
 base_dir = os.path.dirname(__file__)  # Directory in cui si trova humanaize.py
