@@ -1,8 +1,7 @@
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-import numpy as np
+from sklearn.preprocessing import StandardScaler
 import os
 import pandas as pd
 
@@ -13,11 +12,6 @@ dataset_path = os.path.join(base_dir, "../data/dataset.csv")
 # Carica il dataset
 df = pd.read_csv(dataset_path)
 
-
-# Carica il dataset
-#df = pd.read_csv('../data/dataset.csv')
-
-# Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
 
 
 # Definire i target numerici
@@ -39,7 +33,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 vectorizer = TfidfVectorizer()
 X_text = vectorizer.fit_transform(df["descrizione"])
-
 # Preprocessing dei target (normalizzazione)
 scaler = StandardScaler()
 y = scaler.fit_transform(df[targets])
@@ -125,6 +118,7 @@ def visualizza_confronto_log(y_pred_original, y_test_original, targets, num_samp
             print(
                 f"  {target}: Predizione = {y_pred_original[i, j]:.4f}, Reale = {y_test_original[i, j]:.4f}"
             )
+
 
 
 

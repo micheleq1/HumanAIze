@@ -3,6 +3,7 @@ from .humanaize import predizione_personalizzata
 import gui3d
 import gui
 import log
+
 from core import G
 
 class PromptTaskView(gui3d.TaskView):
@@ -124,7 +125,8 @@ class PromptTaskView(gui3d.TaskView):
 
         if "macrodetails-height/Height" in human.getModifierNames(): #sbagliato
             height_value = parameters["height"]  # Normalizza l'altezza (assumendo massimo 2.5 metri)
-            normalized_height = (height_value - 133.40) / (242.28 - 133.40)
+            normalized_height = (height_value-142.63)/(251.53-142.63)
+            normalized_height=min(max(normalized_height,0.0),1.0)
             human.getModifier("macrodetails-height/Height").setValue(normalized_height)
             log.message(f"Set Height: Input={parameters['height']} | NormalizedValue={normalized_height}")
 
