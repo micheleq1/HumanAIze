@@ -14,6 +14,8 @@ dataset_path = os.path.join(base_dir, "../data/dataset.csv")
 df = pd.read_csv(dataset_path)
 
 
+
+
 # Carica il dataset
 #df = pd.read_csv('../data/dataset.csv')
 

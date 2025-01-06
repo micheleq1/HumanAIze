@@ -94,6 +94,19 @@ class PromptTaskView(gui3d.TaskView):
 
         return parameters
 
+    def setHeightCm(self, human, height_cm, updateModifier=True):
+        current_bBox = human.getBoundingBox()
+        current_height_cm = 10 * (current_bBox[1][1] - current_bBox[0][1])
+        log.message(f"bounding: {current_bBox[1][1]}, {current_bBox[0][1]}, {current_bBox[1][1]-current_bBox[0][1]}, altezza corrente: {current_height_cm}")
+
+        if current_height_cm == 0:
+            raise ValueError("Current height is zero. Cannot normalize height.")
+
+        normalized_height = height_cm / current_height_cm * human.getHeight()
+        normalized_height = min(max(normalized_height, 0.0), 1.0)
+
+        return normalized_height
+
     def applyParametersToMakeHuman(self, parameters):
         human = G.app.selectedHuman
 
@@ -123,12 +136,12 @@ class PromptTaskView(gui3d.TaskView):
             human.getModifier("macrodetails/Age").setValue(normalized_age)
             log.message(f"Set Age: Input={parameters['age']} | NormalizedValue={normalized_age}")
 
-        if "macrodetails-height/Height" in human.getModifierNames(): #sbagliato
-            height_value = parameters["height"]  # Normalizza l'altezza (assumendo massimo 2.5 metri)
-            normalized_height = (height_value-142.63)/(251.53-142.63)
-            normalized_height=min(max(normalized_height,0.0),1.0)
-            human.getModifier("macrodetails-height/Height").setValue(normalized_height)
-            log.message(f"Set Height: Input={parameters['height']} | NormalizedValue={normalized_height}")
+            if "macrodetails-height/Height" in human.getModifierNames():
+                height_value=self.setHeightCm(human, parameters["height"], updateModifier=True)
+                human.getModifier("macrodetails-height/Height").setValue(height_value)
+
+                log.message(f"Set Height: Input={parameters['height']} | NormalizedValue={height_value} ")
+
 
         if "macrodetails-universal/Weight" in human.getModifierNames():  #corretto
             weight_value = parameters["weight"]   # Normalizza il peso (assumendo massimo 150 kg)
@@ -202,10 +215,7 @@ class PromptTaskView(gui3d.TaskView):
             log.message(f"Set nipple_point: Input={parameters['nipple_point']} | NormalizedValue={normalized_nipple_point}")
         if "head/head-age-decr|incr" in human.getModifierNames():
             face_age_value = parameters["face_age"]
-            if face_age_value < 25:
-                normalized_face_age = (face_age_value - 1) / ((25 - 1) * 2)
-            else:
-                normalized_face_age = ((face_age_value - 25) / ((90 - 25) * 2)) + 0.5
+            normalized_face_age = (face_age_value - 0) / (100 - 0)
             human.getModifier("head/head-age-decr|incr").setValue(normalized_face_age)
             log.message(f"Set face_age: Input={parameters['face_age']} | NormalizedValue={normalized_face_age}")
         if "head/head-fat-decr|incr" in human.getModifierNames():
