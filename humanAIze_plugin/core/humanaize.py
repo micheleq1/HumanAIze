@@ -1,10 +1,11 @@
-import xgboost as xgb
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-import numpy as np
 import os
+
 import pandas as pd
+import xgboost as xgb
+from sklearn.feature_extraction.text import TfidfVectorizer     # Preprocessing del testo (descrizione) usando TF-IDF
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 # Calcola il percorso assoluto di dataset.csv
 base_dir = os.path.dirname(__file__)  # Directory in cui si trova humanaize.py
@@ -12,15 +13,6 @@ dataset_path = os.path.join(base_dir, "../data/dataset.csv")
 
 # Carica il dataset
 df = pd.read_csv(dataset_path)
-
-
-
-
-# Carica il dataset
-#df = pd.read_csv('../data/dataset.csv')
-
-# Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
-
 
 # Definire i target numerici
 targets = [
@@ -35,9 +27,6 @@ targets = [
     "torso_pectoral_muscle", "fingers_distance", "fingers_diameter",
     "fingers_lenght", "scale_hand", "hand_position", "neck_circum", "neck_height"
 ]
-
-# Preprocessing del testo (descrizione) usando TF-IDF
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 vectorizer = TfidfVectorizer()
 X_text = vectorizer.fit_transform(df["descrizione"])
