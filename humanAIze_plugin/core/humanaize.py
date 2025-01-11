@@ -1,10 +1,10 @@
-import os
-
-import pandas as pd
 import xgboost as xgb
-from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_absolute_error
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+import numpy as np
+import os
+import pandas as pd
 
 # Calcola il percorso assoluto di dataset.csv
 base_dir = os.path.dirname(__file__)  # Directory in cui si trova humanaize.py
@@ -12,6 +12,15 @@ dataset_path = os.path.join(base_dir, "../data/dataset.csv")
 
 # Carica il dataset
 df = pd.read_csv(dataset_path)
+
+
+
+
+# Carica il dataset
+#df = pd.read_csv('../data/dataset.csv')
+
+# Riempi i NaN con mediana (per le colonne numeriche) o moda (per le colonne categoriche)
+
 
 # Definire i target numerici
 targets = [
@@ -118,3 +127,6 @@ def visualizza_confronto_log(y_pred_original, y_test_original, targets, num_samp
             print(
                 f"  {target}: Predizione = {y_pred_original[i, j]:.4f}, Reale = {y_test_original[i, j]:.4f}"
             )
+
+
+
