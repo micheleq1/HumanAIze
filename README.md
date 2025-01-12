@@ -49,7 +49,7 @@ Each row represents a unique configuration of anthropometric parameters derived 
 #### Data Cleaning
 
 - Manual adjustments for specific parameters required by MakeHuman.
-- Missing values filled with median (numerical) or mode (categorical).
+- Missing values filled with mode (categorical).
 
 #### Feature Engineering
 
