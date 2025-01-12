@@ -33,7 +33,7 @@
     ```
    humanAlze_plugin/
     ├── core/
-    │   ├── humanaize.py        # Main script
+    │   ├── humanaize.py        # AI module
     │   ├── prompt_task.py      # Supporting functions
     ├── data/
     │   ├── dataset.csv         # Dataset used
@@ -48,6 +48,8 @@
 If you can't find the folder at the specified path, make sure to open MakeHuman, go to: **Settings → User Plugins** and click on **'Reload User Plugins'**.
 
 ![img.png](MHinstr.png)
+<br>
+
 6. Close (if necessary) MakeHuman and restart, now you can use _HumanAIze_ going to **Utilities → Prompt Generator**
 
 ## Repository structure
@@ -55,13 +57,15 @@ If you can't find the folder at the specified path, make sure to open MakeHuman,
     HumanAIze/
     ├── humanAlze_plugin/
     │   ├── core/
-    │   │   ├── humanaize.py        # Main script
+    │   │   ├── humanaize.py        # AI module
     │   │   ├── prompt_task.py      # Supporting functions
-    │   │   ├── __init__.py         # Initialization file
     │   ├── data/
     │   │   ├── dataset.csv         # Dataset used
     │   ├── resources/
     │   │   ├── icon.png            # Graphic resources
+    │   ├── __init__.py             # Initialization file
     ├── ModifierNames               # Parameter configuration file
     ├── README.md                   # Project documentation
-    ├── requirements.txt            # Necessary dependencies
+
+## Contributions
+Pull requests are welcome. For significant changes, please open an issue first to discuss what you would like to change.
