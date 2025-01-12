@@ -1,20 +1,77 @@
 # HumanAIze
 
+## Authors
+
+- Edoardo Dominicis - [Github](https://github.com/reDev27)
+- Michele Quaglia - [Github](https://github.com/micheleq1)
+
 ## Project Description
 
-**HumanAIze** is a plugin developed for [MakeHuman](https://static.makehumancommunity.org/makehuman.html), an open-source software for creating personalized 3D anthropometric models. This project utilizes machine learning algorithms to automatically generate personalized parameters from textual descriptions, simplifying and accelerating the creation process of complex humanoid characters.
+**HumanAIze** is a plugin developed for [MakeHuman](https://static.makehumancommunity.org/makehuman.html), an open-source software for creating personalized 3D anthropometric models. The project uses machine learning algorithms to generate customized parameters based on textual descriptions, simplifying and speeding up the creation of complex humanoid characters without the need for advanced modeling tools.
 
-## Objectives
+### Goals of the Project
 
-- Automate the generation of 3D models in MakeHuman based on textual descriptions.
-- Experiment with artificial intelligence techniques, including data preprocessing, regression (with boosting), and software integration.
-- Create a synthetic dataset suitable for training the machine learning model.
+- **Integrating AI in MakeHuman:** Enhance personalization capabilities and speed up tedious processes.
+- **Automating model creation:** Use an AI capable of predicting parameters from short textual descriptions (e.g., "A robust man, 50 years old").
+- **Learning Objectives:**
+  - Explore machine learning techniques (e.g., linear regression, boosting, and preprocessing).
+  - Understand Python and plugin development for MakeHuman.
+  - Build and use a synthetic dataset to train the model.
+
+### Pre-existing Environment and Design Choices
+
+#### Pre-existing Environment
+
+- **MakeHuman** (ver 1.3.0): An open-source software tool for generating 3D anthropometric models.
+
+#### Design Choices
+
+- **Use of XGBoost:** Selected for its efficiency and interpretability.
+- **Modular architecture(not yet implemented):** Divided into preprocessing, model training, and integration with MakeHuman, ensuring modularity and maintainability.
+
+## Dataset
+
+### Sources and Description
+
+The dataset was synthetically generated using ChatGPT, as no existing dataset paired textual descriptions with the specific physical parameters accepted by MakeHuman.
+
+#### Example Parameters:
+
+- **General Parameters:** gender, age, height, weight, muscle.
+- **Facial Features:** head angle, face fat, head oval.
+- **Torso Features:** scale depth, dorsi muscle.
+- **Extremities:** finger length, hand scale, neck height.
+
+Each row represents a unique configuration of anthropometric parameters derived from textual descriptions.
+
+### Preprocessing
+
+#### Data Cleaning
+
+- Manual adjustments for specific parameters required by MakeHuman.
+- Missing values filled with median (numerical) or mode (categorical).
+
+#### Feature Engineering
+
+- Textual descriptions were transformed into numerical vectors using TF-IDF.
+- Numerical values were normalized to ensure consistency.
+
+#### Train-Test Split
+
+- The dataset was split into 80% training and 20% testing data, ensuring a balanced representation.
+
+### Limitations and Potential Improvements
+
+#### Potential Improvements
+
+- Use more advanced algorithms like neural networks.
+- Expand the dataset for better generalizability.
 
 ## Installation
 
 ### Requirements
 
-- MakeHuman version 1.3.0 ([https://static.makehumancommunity.org/mpfb/downloads.html](https://static.makehumancommunity.org/mpfb/downloads.html))
+- MakeHuman version 1.3.0 [(download here)](https://files2.makehumancommunity.org/releases/)
 - Required libraries:
   - `pandas`
   - `xgboost`
@@ -68,4 +125,4 @@ If you can't find the folder at the specified path, make sure to open MakeHuman,
     ├── README.md                   # Project documentation
 
 ## Contributions
-Pull requests are welcome. For significant changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For significant changes, please open an issue first to discuss what you would like to change. Other instructions on how to replicate the developing sandbox will be added soon.
